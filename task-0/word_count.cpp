@@ -1,17 +1,17 @@
-#include <string>
+#include <algorithm>
+#include <fstream>
+#include <iomanip>
 #include <list>
 #include <map>
-#include <fstream>
-#include <algorithm>
+#include <string>
 #include <vector>
-#include <iomanip>
 
 using std::list;
 using std::string;
 
 class StringProcessor
 {
-  public:
+public:
     static string toLower(const string &str)
     {
         string result = str;
@@ -32,32 +32,29 @@ class StringProcessor
         list<string> words;
         std::istringstream iss(str);
         string word;
-        while (iss >> word)
-        {
+        while (iss >> word) {
             word = removePunctuation(word);
             word = toLower(word);
-            if (!word.empty())
-            {
+            if (!word.empty()) {
                 words.push_back(word);
             }
         }
         return words;
     }
 
-  private:
+private:
     static unsigned char toLowerChar(unsigned char c) { return tolower(c); }
 };
 
 class FileProcessor
 {
-  public:
+public:
     static list<string> readLinesFromFile(const string &file_name)
     {
         list<string> lines;
         std::ifstream input_file(file_name);
         string line;
-        while (getline(input_file, line))
-        {
+        while (getline(input_file, line)) {
             lines.push_back(line);
         }
         input_file.close();
@@ -65,39 +62,38 @@ class FileProcessor
     }
 
     static void writeWordsFrequencyToFile(
-        const string &file_name,
-        const std::vector<std::pair<string, int>> &sorted_words, int words_amount)
+            const string &file_name,
+            const std::vector<std::pair<string, int>> &sorted_words,
+            int words_amount)
     {
         std::ofstream output_file(file_name);
         output_file << "Word, Frequency, Frequency(%)" << std::endl;
-        for (const auto &pair : sorted_words)
-        {
+        for (const auto &pair: sorted_words) {
             double frequency_percent =
-                calculateFrequencyPercent(pair.second, words_amount);
+                    calculateFrequencyPercent(pair.second, words_amount);
             output_file << pair.first << "," << pair.second << "," << std::fixed
                         << std::setprecision(2) << frequency_percent << std::endl;
         }
         output_file.close();
     }
 
-  private:
-    static double calculateFrequencyPercent(int word_frequency, int words_amount)
+private:
+    static double calculateFrequencyPercent(int word_frequency,
+                                            int words_amount)
     {
-        return ((double)word_frequency / words_amount) * 100;
+        return ((double) word_frequency / words_amount) * 100;
     }
 };
 
 class WordFrequencyCounter
 {
-  public:
+public:
     void countWordsFrequency(const string &input_file_name)
     {
         list<string> lines = FileProcessor::readLinesFromFile(input_file_name);
-        for (const auto &line : lines)
-        {
+        for (const auto &line: lines) {
             list<string> words = StringProcessor::splitIntoWords(line);
-            for (const auto &word : words)
-            {
+            for (const auto &word: words) {
                 words_amount++;
                 words_frequency[word]++;
             }
@@ -113,7 +109,7 @@ class WordFrequencyCounter
 
     int getWordsAmount() const { return words_amount; }
 
-  private:
+private:
     std::map<string, int> words_frequency;
     int words_amount = 0;
 
@@ -131,7 +127,7 @@ int main(int argc, char *argv[])
     WordFrequencyCounter words_counter;
     words_counter.countWordsFrequency(input_file_name);
     std::vector<std::pair<string, int>> sorted_words =
-        words_counter.getSortedWordsFrequency();
+            words_counter.getSortedWordsFrequency();
     FileProcessor::writeWordsFrequencyToFile(output_file_name, sorted_words,
                                              words_counter.getWordsAmount());
     return 0;
