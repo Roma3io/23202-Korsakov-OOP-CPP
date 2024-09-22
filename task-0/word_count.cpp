@@ -46,14 +46,14 @@ public:
     }
 };
 
-class InputFileProcessor
+class FileReader
 {
 private:
     std::ifstream inputFile;
     string inputFileName;
 
 public:
-    InputFileProcessor(const string &fileName)
+    FileReader(const string &fileName)
     {
         inputFileName = fileName;
     }
@@ -99,23 +99,24 @@ private:
     }
 
 public:
+    void addWord(const string &word)
+    {
+        wordsAmount++;
+        wordsFrequency[word]++;
+    }
     void addWordsFromString(const string &str)
     {
         list<string> words = Parser::splitIntoWords(str);
         for (const string &word: words) {
-            wordsAmount++;
-            wordsFrequency[word]++;
+            addWord(word);
         }
     }
-    void getWordsFrequency(const string &fileName)
+    void getWordsFrequency(FileReader &fileReader)
     {
-        InputFileProcessor fileProcessor(fileName);
-        fileProcessor.open();
-        while (fileProcessor.hasNext()) {
-            string line = fileProcessor.next();
+        while (fileReader.hasNext()) {
+            string line = fileReader.next();
             addWordsFromString(line);
         }
-        fileProcessor.close();
     }
     std::vector<std::pair<string, int>> getSortedWordsFrequency() const
     {
@@ -127,7 +128,7 @@ public:
     int getWordsAmount() const { return wordsAmount; }
 };
 
-class OutputFileProcessor
+class FileWriter
 {
 private:
     string outputFileName;
@@ -140,7 +141,7 @@ private:
     }
 
 public:
-    OutputFileProcessor(const string &fileName)
+    FileWriter(const string &fileName)
     {
         outputFileName = fileName;
     }
@@ -170,12 +171,15 @@ public:
 int main(int argc, char *argv[])
 {
     string inputFileName = argv[1];
-    string outputFileName = argv[2];
     Statistic statistic;
-    statistic.getWordsFrequency(inputFileName);
-    OutputFileProcessor fileProcessor(outputFileName);
-    fileProcessor.open();
-    fileProcessor.writeWordsFrequencyToFile(statistic);
-    fileProcessor.close();
+    FileReader fileReader(inputFileName);
+    fileReader.open();
+    statistic.getWordsFrequency(fileReader);
+    fileReader.close();
+    string outputFileName = argv[2];
+    FileWriter fileWriter(outputFileName);
+    fileWriter.open();
+    fileWriter.writeWordsFrequencyToFile(statistic);
+    fileWriter.close();
     return 0;
 }
