@@ -153,18 +153,15 @@ public:
     {
         outputFile.close();
     }
-    void writeWordsFrequencyToFile(const Statistic &statistic)
+    void writeWordsFrequencyToFile(std::vector<std::pair<string, int>> sortedWords, int wordsAmount)
     {
         outputFile << "Word, Frequency, Frequency(%)" << std::endl;
-        std::vector<std::pair<string, int>> sortedWords =
-                statistic.getSortedWordsFrequency();
         for (const auto &pair: sortedWords) {
             double frequencyPercent =
-                    calculateFrequencyPercent(pair.second, statistic.getWordsAmount());
+                    calculateFrequencyPercent(pair.second, wordsAmount);
             outputFile << pair.first << "," << pair.second << "," << std::fixed
                        << std::setprecision(2) << frequencyPercent << std::endl;
         }
-        outputFile.close();
     }
 };
 
@@ -178,8 +175,11 @@ int main(int argc, char *argv[])
     fileReader.close();
     string outputFileName = argv[2];
     FileWriter fileWriter(outputFileName);
+    std::vector<std::pair<string, int>> sortedWords =
+            statistic.getSortedWordsFrequency();
+    int wordsAmount = statistic.getWordsAmount();
     fileWriter.open();
-    fileWriter.writeWordsFrequencyToFile(statistic);
+    fileWriter.writeWordsFrequencyToFile(sortedWords, wordsAmount);
     fileWriter.close();
     return 0;
 }
