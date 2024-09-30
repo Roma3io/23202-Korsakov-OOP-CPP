@@ -42,7 +42,6 @@ TEST(Statistic, getSortedWordsFrequency)
     statistic.addWord("word");
     statistic.addWord("another");
     statistic.addWord("test");
-
     std::vector<std::pair<std::string, int>> sortedWords = statistic.getSortedWordsFrequency();
     ASSERT_EQ(sortedWords.size(), 3);
     ASSERT_EQ(sortedWords[0].first, "word");

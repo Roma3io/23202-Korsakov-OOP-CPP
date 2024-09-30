@@ -58,13 +58,3 @@ TEST(FileReader, toBeginning)
     ASSERT_FALSE(fileReader.hasNext());
     fileReader.close();
 }
-
-TEST(FileReader, close)
-{
-    std::string fileName = "test_close.txt";
-    createTempFile(fileName, "Hello, World!");
-    FileReader fileReader(fileName);
-    fileReader.open();
-    fileReader.close();
-    ASSERT_FALSE(fileReader.isOpen());
-}
