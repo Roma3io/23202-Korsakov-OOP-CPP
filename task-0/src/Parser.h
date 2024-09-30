@@ -18,4 +18,4 @@ public:
     static std::list<std::string> splitIntoWords(const std::string &str);
 };
 
-#endif// PARSER_H
+#endif
