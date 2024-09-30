@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     fileReader.close();
     std::string outputFileName = argv[2];
     FileWriter fileWriter(outputFileName);
-    std::vector<std::pair<std::string, int>> sortedWords = statistic.getSortedWordsFrequency();
+    std::vector<std::pair<std::string, int>> sortedWords = statistic.getSortedStatistic();
     int wordsAmount = statistic.getWordsAmount();
     fileWriter.open();
     fileWriter.writeWordsFrequencyToFile(sortedWords, wordsAmount);

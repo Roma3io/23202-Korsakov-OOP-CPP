@@ -19,7 +19,7 @@ void Statistic::getWordsFrequency(FileReader &fileReader) {
     }
 }
 
-std::vector<std::pair<std::string, int>> Statistic::getSortedWordsFrequency() const {
+std::vector<std::pair<std::string, int>> Statistic::getSortedStatistic() const {
     std::vector<std::pair<std::string, int>> sortedWords(wordsFrequency.begin(),
                                                          wordsFrequency.end());
     std::sort(sortedWords.begin(), sortedWords.end(), frequencyComparator);

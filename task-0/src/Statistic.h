@@ -22,7 +22,7 @@ public:
     void addWord(const std::string &word);
     void addWordsFromString(const std::string &str);
     void getWordsFrequency(FileReader &fileReader);
-    std::vector<std::pair<std::string, int>> getSortedWordsFrequency() const;
+    std::vector<std::pair<std::string, int>> getSortedStatistic() const;
     int getWordsAmount() const;
 };
 
