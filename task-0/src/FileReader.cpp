@@ -34,7 +34,7 @@ std::string FileReader::next()
     return "";
 }
 
-void FileReader::toBeginning()
+void FileReader::rewind()
 {
     inputFile.seekg(0, std::ios::beg);
 }

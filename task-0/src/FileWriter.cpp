@@ -15,20 +15,14 @@ void FileWriter::close()
     outputFile.close();
 }
 
-bool FileWriter::isOpen(){
+bool FileWriter::isOpen()
+{
     return outputFile.is_open();
 }
 
-double FileWriter::calculateFrequencyPercent(int wordFrequency, int wordsAmount)
+void FileWriter::write(std::vector<std::string> lines)
 {
-    return ((double) wordFrequency / wordsAmount) * PERCENT;
-}
-
-void FileWriter::writeWordsFrequencyToFile(std::vector<std::pair<std::string, int>> sortedWords, int wordsAmount)
-{
-    outputFile << "Word, Frequency, Frequency(%)" << std::endl;
-    for (const auto &pair: sortedWords) {
-        double frequencyPercent = calculateFrequencyPercent(pair.second, wordsAmount);
-        outputFile << pair.first << "," << pair.second << "," << std::fixed << std::setprecision(2) << frequencyPercent << std::endl;
+    for (const auto &line: lines) {
+        outputFile << line << std::endl;
     }
 }

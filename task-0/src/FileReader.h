@@ -16,7 +16,7 @@ public:
     bool isOpen();
     bool hasNext();
     std::string next();
-    void toBeginning();
+    void rewind();
 };
 
 #endif

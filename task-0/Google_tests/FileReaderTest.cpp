@@ -43,7 +43,7 @@ TEST(FileReader, nextEmptyFile)
     fileReader.close();
 }
 
-TEST(FileReader, toBeginning)
+TEST(FileReader, rewind)
 {
     std::string fileName = "test_to_beginning.txt";
     createTempFile(fileName, "Line1\nLine2\nLine3");
@@ -51,7 +51,7 @@ TEST(FileReader, toBeginning)
     fileReader.open();
     ASSERT_EQ(fileReader.next(), "Line1");
     ASSERT_EQ(fileReader.next(), "Line2");
-    fileReader.toBeginning();
+    fileReader.rewind();
     ASSERT_EQ(fileReader.next(), "Line1");
     ASSERT_EQ(fileReader.next(), "Line2");
     ASSERT_EQ(fileReader.next(), "Line3");
