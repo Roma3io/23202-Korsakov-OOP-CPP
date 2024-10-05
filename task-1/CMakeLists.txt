@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
 project(task_1)
 set(CMAKE_CXX_STANDARD 20)
-add_executable(BitArray BitArray.cpp BitArray.h)
 add_subdirectory(Google_tests)
 add_library(${CMAKE_PROJECT_NAME}_lib STATIC BitArray.cpp BitArray.h)

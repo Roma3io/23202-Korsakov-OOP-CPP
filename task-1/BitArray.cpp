@@ -1,5 +1,4 @@
 #include "BitArray.h"
-#include <iostream>
 #include <stdexcept>
 #include <string>
 BitArray::BitArray()
@@ -272,11 +271,4 @@ BitArray operator^(const BitArray &b1, const BitArray &b2)
     BitArray result(b1);
     result ^= b2;
     return result;
-}
-
-int main()
-{
-    BitArray bitArray1(4, 1);
-    BitArray bitArray2(4, 0);
-    std::cout << 'a';
 }
