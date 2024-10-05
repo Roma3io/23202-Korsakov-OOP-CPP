@@ -8,22 +8,6 @@ TEST(Statistic, addWord)
     ASSERT_EQ(statistic.getWordsAmount(), 1);
 }
 
-TEST(Statistic, addWordsFromString)
-{
-    Statistic statistic;
-    std::string line = "Line of words";
-    statistic.addWordsFromString(line);
-    ASSERT_EQ(statistic.getWordsAmount(), 3);
-}
-
-TEST(Statistic, addWordsFromStringWithPunctuation)
-{
-    Statistic statistic;
-    std::string line = "Line, of words!";
-    statistic.addWordsFromString(line);
-    ASSERT_EQ(statistic.getWordsAmount(), 3);
-}
-
 TEST(Statistic, addMultipleSameWords)
 {
     Statistic statistic;
@@ -33,7 +17,7 @@ TEST(Statistic, addMultipleSameWords)
     ASSERT_EQ(statistic.getWordsAmount(), 3);
 }
 
-TEST(Statistic, getSortedWordsFrequency)
+TEST(Statistic, getStatistic)
 {
     Statistic statistic;
     statistic.addWord("word");
@@ -42,7 +26,7 @@ TEST(Statistic, getSortedWordsFrequency)
     statistic.addWord("word");
     statistic.addWord("another");
     statistic.addWord("test");
-    std::vector<std::pair<std::string, int>> sortedWords = statistic.getSortedWordsFrequency();
+    std::vector<std::pair<std::string, int>> sortedWords = statistic.getStatistic();
     ASSERT_EQ(sortedWords.size(), 3);
     ASSERT_EQ(sortedWords[0].first, "word");
     ASSERT_EQ(sortedWords[0].second, 3);

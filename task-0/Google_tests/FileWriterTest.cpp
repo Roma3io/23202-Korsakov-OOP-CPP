@@ -29,33 +29,18 @@ TEST(FileWriter, close)
     ASSERT_FALSE(fileWriter.isOpen());
 }
 
-TEST(FileWriter, writeWordsFrequencyToFile)
+TEST(FileWriter, write)
 {
-    std::string fileName = "test_write_words_frequency.txt";
+    std::string fileName = "test_write.txt";
     FileWriter fileWriter(fileName);
     fileWriter.open();
-    std::vector<std::pair<std::string, int>> sortedWords = {
-            {"word1", 3},
-            {"word2", 2},
-            {"word3", 1}};
-    int wordsAmount = 6;
-    fileWriter.writeWordsFrequencyToFile(sortedWords, wordsAmount);
+    std::vector<std::string> lines = {
+            "Line 1",
+            "Line 2",
+            "Line 3"};
+    fileWriter.write(lines);
     fileWriter.close();
-    std::string expectedContent = "Word, Frequency, Frequency(%)\nword1,3,50.00\nword2,2,33.33\nword3,1,16.67\n";
-    std::string actualContent = readFileContent(fileName);
-    ASSERT_EQ(actualContent, expectedContent);
-}
-
-TEST(FileWriter, writeWordsFrequencyToFileEmptyList)
-{
-    std::string fileName = "test_write_words_frequency_empty_list.txt";
-    FileWriter fileWriter(fileName);
-    fileWriter.open();
-    std::vector<std::pair<std::string, int>> sortedWords = {};
-    int wordsAmount = 0;
-    fileWriter.writeWordsFrequencyToFile(sortedWords, wordsAmount);
-    fileWriter.close();
-    std::string expectedContent = "Word, Frequency, Frequency(%)\n";
-    std::string actualContent = readFileContent(fileName);
-    ASSERT_EQ(actualContent, expectedContent);
+    std::string expected = "Line 1\nLine 2\nLine 3\n";
+    std::string actual = readFileContent(fileName);
+    ASSERT_EQ(actual, expected);
 }
