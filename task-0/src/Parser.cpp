@@ -7,24 +7,29 @@ std::string Parser::toLower(const std::string &str)
     return result;
 }
 
-std::string Parser::removePunctuation(const std::string &str)
-{
-    std::string result = str;
-    result.erase(std::remove_if(result.begin(), result.end(), ::ispunct), result.end());
-    return result;
-}
-
 std::list<std::string> Parser::splitIntoWords(const std::string &str)
 {
     std::list<std::string> words;
-    std::istringstream iss(str);
     std::string word;
-    while (iss >> word) {
-        word = removePunctuation(word);
-        word = toLower(word);
-        if (!word.empty()) {
-            words.push_back(word);
+    for (char ch: str) {
+        if (isDelim(ch)) {
+            if (!word.empty()) {
+                word = toLower(word);
+                words.push_back(word);
+                word.clear();
+            }
+        } else {
+            word += ch;
         }
     }
+    if (!word.empty()) {
+        word = toLower(word);
+        words.push_back(word);
+    }
     return words;
+}
+
+bool Parser::isDelim(char ch)
+{
+    return !(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ('0' <= ch && ch <= '9'));
 }

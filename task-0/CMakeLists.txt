@@ -12,4 +12,5 @@ add_subdirectory(src)
 
 add_subdirectory(Google_tests)
 
+
 target_link_libraries(word_count ${CMAKE_PROJECT_NAME}_lib)
