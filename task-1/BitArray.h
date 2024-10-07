@@ -1,7 +1,25 @@
+#ifndef BIT_ARRAY_H
+#define BIT_ARRAY_H
+
 #include <string>
 #include <vector>
+
 class BitArray
 {
+private:
+    class Wrapper
+    {
+    private:
+        BitArray &bitArray;
+        int index;
+    public:
+        Wrapper(BitArray &bitArray, int index);
+        Wrapper &operator=(bool value);
+        operator bool() const;
+    };
+    int numBits;
+    std::vector<unsigned char> data;
+
 public:
     BitArray();
     ~BitArray();
@@ -43,6 +61,8 @@ public:
 
     int count() const;
 
+    Wrapper operator[](int i);
+
     bool operator[](int i) const;
 
     int size() const;
@@ -50,10 +70,6 @@ public:
     bool empty() const;
 
     std::string toString() const;
-
-private:
-    int capacity;
-    std::vector<unsigned char> data;
 };
 
 bool operator==(const BitArray &a, const BitArray &b);
@@ -62,3 +78,5 @@ bool operator!=(const BitArray &a, const BitArray &b);
 BitArray operator&(const BitArray &b1, const BitArray &b2);
 BitArray operator|(const BitArray &b1, const BitArray &b2);
 BitArray operator^(const BitArray &b1, const BitArray &b2);
+
+#endif

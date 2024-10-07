@@ -1,17 +1,15 @@
 #include "BitArray.h"
+#include <iostream>
 #include <stdexcept>
 #include <string>
-BitArray::BitArray()
-{
-    capacity = 0;
-}
+
+BitArray::BitArray() : numBits(0) {}
 
 BitArray::~BitArray() = default;
 
-BitArray::BitArray(int capacity, unsigned long value)
+BitArray::BitArray(int numBits, unsigned long value) : numBits(numBits)
 {
-    this->capacity = capacity;
-    data.resize((capacity + 7) / 8);
+    data.resize((numBits + 7) / 8);
     for (int i = 0; i < sizeof(long); i++) {
         set(i, value & 0x01);
     }
@@ -20,54 +18,54 @@ BitArray::BitArray(int capacity, unsigned long value)
 BitArray::BitArray(const BitArray &b)
 {
     data = b.data;
-    capacity = b.capacity;
+    numBits = b.numBits;
 }
 
 void BitArray::swap(BitArray &b)
 {
     data.swap(b.data);
-    std::swap(capacity, b.capacity);
+    std::swap(numBits, b.numBits);
 }
 
 BitArray &BitArray::operator=(const BitArray &b)
 {
     resize(b.data.size());
     data = b.data;
-    capacity = b.capacity;
+    numBits = b.numBits;
     return *this;
 }
 
-void BitArray::resize(int capacity, bool value)
+void BitArray::resize(int numBits, bool value)
 {
-    data.resize((capacity + 7) / 8);
-    for (int i = this->capacity; i < capacity; ++i) {
+    data.resize((numBits + 7) / 8);
+    for (int i = this->numBits; i < numBits; ++i) {
         set(i, value);
     }
-    this->capacity = capacity;
+    this->numBits = numBits;
 }
 
 void BitArray::clear()
 {
-    capacity = 0;
+    numBits = 0;
     data.clear();
 }
 
 void BitArray::pushBack(bool bit)
 {
-    if (capacity % 8 != 0) {
-        resize(capacity + 1);
-        set(capacity - 1, bit);
+    if (numBits % 8 != 0) {
+        resize(numBits + 1);
+        set(numBits - 1, bit);
     } else {
-        set(capacity - 1, bit);
+        set(numBits - 1, bit);
     }
 }
 
 BitArray &BitArray::operator&=(const BitArray &b)
 {
-    if (capacity != b.capacity) {
+    if (numBits != b.numBits) {
         throw std::invalid_argument("BitArrays must have the same size for bitwise AND operation");
     }
-    for (int i = 0; i < capacity; ++i) {
+    for (int i = 0; i < numBits; ++i) {
         set(i, (*this)[i] & b[i]);
     }
     return *this;
@@ -75,10 +73,10 @@ BitArray &BitArray::operator&=(const BitArray &b)
 
 BitArray &BitArray::operator|=(const BitArray &b)
 {
-    if (capacity != b.capacity) {
+    if (numBits != b.numBits) {
         throw std::invalid_argument("BitArrays must have the same size for bitwise OR operation");
     }
-    for (int i = 0; i < capacity; ++i) {
+    for (int i = 0; i < numBits; ++i) {
         set(i, (*this)[i] | b[i]);
     }
     return *this;
@@ -86,17 +84,17 @@ BitArray &BitArray::operator|=(const BitArray &b)
 
 BitArray &BitArray::operator^=(const BitArray &b)
 {
-    if (capacity != b.capacity) {
+    if (numBits != b.numBits) {
         throw std::invalid_argument("BitArrays must have the same size for bitwise XOR operation");
     }
-    for (int i = 0; i < capacity; ++i) {
+    for (int i = 0; i < numBits; i++) {
         set(i, (*this)[i] ^ b[i]);
     }
     return *this;
 }
 BitArray &BitArray::operator<<=(int n)
 {
-    for (int i = capacity - 1; i >= n; --i) {
+    for (int i = numBits - 1; i >= n; i--) {
         set(i, (*this)[i - n]);
     }
     for (int i = 0; i < n; ++i) {
@@ -108,10 +106,10 @@ BitArray &BitArray::operator<<=(int n)
 BitArray &BitArray::operator>>=(int n)
 {
 
-    for (int i = 0; i < capacity - n; ++i) {
+    for (int i = 0; i < numBits - n; ++i) {
         set(i, (*this)[i + n]);
     }
-    for (int i = capacity - n; i < capacity; ++i) {
+    for (int i = numBits - n; i < numBits; ++i) {
         set(i, false);
     }
     return *this;
@@ -145,7 +143,7 @@ BitArray &BitArray::set(int index, bool value)
 
 BitArray &BitArray::set()
 {
-    for (int i = 0; i < capacity; i++) {
+    for (int i = 0; i < numBits; i++) {
         set(i, true);
     }
     return *this;
@@ -159,7 +157,7 @@ BitArray &BitArray::reset(int index)
 
 BitArray &BitArray::reset()
 {
-    for (int i = 0; i < capacity; i++) {
+    for (int i = 0; i < numBits; i++) {
         set(i, false);
     }
     return *this;
@@ -167,7 +165,7 @@ BitArray &BitArray::reset()
 
 bool BitArray::any() const
 {
-    for (int i = 0; i < capacity; i++) {
+    for (int i = 0; i < numBits; i++) {
         if ((*this)[i])
             return true;
     }
@@ -176,7 +174,7 @@ bool BitArray::any() const
 
 bool BitArray::none() const
 {
-    for (int i = 0; i < capacity; i++) {
+    for (int i = 0; i < numBits; i++) {
         if ((*this)[i])
             return false;
     }
@@ -186,7 +184,7 @@ bool BitArray::none() const
 BitArray BitArray::operator~() const
 {
     BitArray result(*this);
-    for (int i = 0; i < capacity; ++i) {
+    for (int i = 0; i < numBits; ++i) {
         result.set(i, !(*this)[i]);
     }
     return result;
@@ -195,12 +193,32 @@ BitArray BitArray::operator~() const
 int BitArray::count() const
 {
     int count = 0;
-    for (int i = 0; i < capacity; i++) {
+    for (int i = 0; i < numBits; i++) {
         if ((*this)[i]) {
             count++;
         }
     }
     return count;
+}
+
+BitArray::Wrapper::Wrapper(BitArray &bitArray, int index) : bitArray(bitArray), index(index) {}
+
+BitArray::Wrapper BitArray::operator[](int i)
+{
+    return Wrapper(*this, i);
+}
+
+BitArray::Wrapper &BitArray::Wrapper::operator=(bool value)
+{
+    bitArray.set(index, value);
+    return *this;
+}
+
+BitArray::Wrapper::operator bool() const
+{
+    int byteIndex = index / 8;
+    int bitIndex = index % 8;
+    return (bitArray.data[byteIndex] >> bitIndex) & 0x01;
 }
 
 bool BitArray::operator[](int i) const
@@ -212,19 +230,18 @@ bool BitArray::operator[](int i) const
 
 int BitArray::size() const
 {
-    return capacity;
+    return numBits;
 }
-
 
 bool BitArray::empty() const
 {
-    return capacity == 0;
+    return numBits == 0;
 }
 
 std::string BitArray::toString() const
 {
     std::string result;
-    for (int i = 0; i < capacity; i++) {
+    for (int i = 0; i < numBits; i++) {
         result += (*this)[i] ? '1' : '0';
     }
     return result;
