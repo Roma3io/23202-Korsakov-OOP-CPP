@@ -25,7 +25,6 @@ TEST(Parser, splitIntoWordsEmptyString)
     ASSERT_EQ(result, expected);
 }
 
-// Тест для проверки разбиения строки с пробелами
 TEST(Parser, splitIntoWordsWithSpaces)
 {
     std::string input = "   Hello   World   ";
