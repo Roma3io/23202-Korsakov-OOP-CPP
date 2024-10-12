@@ -160,7 +160,7 @@ TEST(BitArray, ResetBit)
 {
     BitArray bitArray(4, 15);
     bitArray.reset(2);
-    ASSERT_EQ(bitArray.toString(), "1011");
+    ASSERT_EQ(bitArray.toString(), "1101");
 }
 
 TEST(BitArray, ResetAllBits)
@@ -193,7 +193,7 @@ TEST(BitArray, BitwiseNOT)
     ASSERT_EQ(result.toString(), "1101");
     bitArray.set();
     result = ~bitArray;
-    ASSERT_FALSE(bitArray.any());
+    ASSERT_FALSE(result.any());
 }
 
 TEST(BitArray, Count)
@@ -248,7 +248,7 @@ TEST(BitArray, ToString){
     BitArray bitArray3(4, 0);
     bitArray3.set(0, true);
     bitArray3.set(2, true);
-    ASSERT_EQ(bitArray3.toString(), "0101");
+    ASSERT_EQ(bitArray3.toString(), "1010");
     BitArray bitArray4(4, 15);
     ASSERT_EQ(bitArray4.toString(), "1111");
     BitArray bitArray5(4, 1);

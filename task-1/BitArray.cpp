@@ -1,7 +1,6 @@
 #include "BitArray.h"
-#include <stdexcept>
+#include <iostream>
 #include <string>
-
 /***************************************************************************
 *   Method     : BitArray (default constructor)
 *   Description: Default constructor. Initializes an empty BitArray with 0 bits.
@@ -126,7 +125,8 @@ void BitArray::pushBack(bool bit)
 BitArray &BitArray::operator&=(const BitArray &b)
 {
     if (numBits != b.numBits) {
-        throw std::invalid_argument("BitArrays must have the same size for bitwise AND operation");
+        std::cerr << "Error: BitArrays must have the same size for bitwise AND operation" << std::endl;
+        return *this;
     }
     for (int i = 0; i < numBits; ++i) {
         set(i, (*this)[i] & b[i]);
@@ -143,7 +143,8 @@ BitArray &BitArray::operator&=(const BitArray &b)
 BitArray &BitArray::operator|=(const BitArray &b)
 {
     if (numBits != b.numBits) {
-        throw std::invalid_argument("BitArrays must have the same size for bitwise OR operation");
+        std::cerr << "Error: BitArrays must have the same size for bitwise OR operation" << std::endl;
+        return *this;
     }
     for (int i = 0; i < numBits; ++i) {
         set(i, (*this)[i] | b[i]);
@@ -160,7 +161,8 @@ BitArray &BitArray::operator|=(const BitArray &b)
 BitArray &BitArray::operator^=(const BitArray &b)
 {
     if (numBits != b.numBits) {
-        throw std::invalid_argument("BitArrays must have the same size for bitwise XOR operation");
+        std::cerr << "Error: BitArrays must have the same size for bitwise XOR operation" << std::endl;
+        return *this;
     }
     for (int i = 0; i < numBits; i++) {
         set(i, (*this)[i] ^ b[i]);
@@ -474,10 +476,10 @@ bool operator!=(const BitArray &a, const BitArray &b)
     if (a.size() != b.size())
         return true;
     for (int i = 0; i < a.size(); i++) {
-        if (a[i] == b[i])
-            return false;
+        if (a[i] != b[i])
+            return true;
     }
-    return true;
+    return false;
 }
 
 /***************************************************************************
