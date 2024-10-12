@@ -17,6 +17,7 @@ private:
         Wrapper &operator=(bool value);
         operator bool() const;
     };
+
     int numBits;
     std::vector<unsigned char> data;
 
@@ -27,46 +28,34 @@ public:
     BitArray(const BitArray &b);
 
     void swap(BitArray &b);
-
     BitArray &operator=(const BitArray &b);
 
     void resize(int numBits, bool value = false);
-
     void clear();
-
     void pushBack(bool bit);
 
     BitArray &operator&=(const BitArray &b);
     BitArray &operator|=(const BitArray &b);
     BitArray &operator^=(const BitArray &b);
-
     BitArray &operator<<=(int n);
     BitArray &operator>>=(int n);
     BitArray operator<<(int n) const;
     BitArray operator>>(int n) const;
 
     BitArray &set(int index, bool value = true);
-
     BitArray &set();
-
     BitArray &reset(int index);
-
     BitArray &reset();
 
     bool any() const;
-
     bool none() const;
-
     BitArray operator~() const;
-
     int count() const;
 
     Wrapper operator[](int i);
-
     bool operator[](int i) const;
 
     int size() const;
-
     bool empty() const;
 
     std::string toString() const;
@@ -79,4 +68,4 @@ BitArray operator&(const BitArray &b1, const BitArray &b2);
 BitArray operator|(const BitArray &b1, const BitArray &b2);
 BitArray operator^(const BitArray &b1, const BitArray &b2);
 
-#endif
+#endif // BIT_ARRAY_H
