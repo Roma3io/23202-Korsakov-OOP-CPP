@@ -1,6 +1,5 @@
 #include "../BitArray.h"
 #include <gtest/gtest.h>
-#include <typeinfo>
 
 TEST(BitArray, DefaultConstructor)
 {
