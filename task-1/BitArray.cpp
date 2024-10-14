@@ -1,6 +1,8 @@
 #include "BitArray.h"
 #include <iostream>
+#include <stdexcept>
 #include <string>
+
 /***************************************************************************
 *   Method     : BitArray (default constructor)
 *   Description: Default constructor. Initializes an empty BitArray with 0 bits.
@@ -125,8 +127,7 @@ void BitArray::pushBack(bool bit)
 BitArray &BitArray::operator&=(const BitArray &b)
 {
     if (numBits != b.numBits) {
-        std::cerr << "Error: BitArrays must have the same size for bitwise AND operation" << std::endl;
-        return *this;
+        throw std::invalid_argument("Error: BitArrays must have the same size for bitwise AND operation");
     }
     for (int i = 0; i < numBits; ++i) {
         set(i, (*this)[i] & b[i]);
@@ -143,8 +144,7 @@ BitArray &BitArray::operator&=(const BitArray &b)
 BitArray &BitArray::operator|=(const BitArray &b)
 {
     if (numBits != b.numBits) {
-        std::cerr << "Error: BitArrays must have the same size for bitwise OR operation" << std::endl;
-        return *this;
+        throw std::invalid_argument("Error: BitArrays must have the same size for bitwise OR operation");
     }
     for (int i = 0; i < numBits; ++i) {
         set(i, (*this)[i] | b[i]);
@@ -161,8 +161,7 @@ BitArray &BitArray::operator|=(const BitArray &b)
 BitArray &BitArray::operator^=(const BitArray &b)
 {
     if (numBits != b.numBits) {
-        std::cerr << "Error: BitArrays must have the same size for bitwise XOR operation" << std::endl;
-        return *this;
+        throw std::invalid_argument("Error: BitArrays must have the same size for bitwise XOR operation");
     }
     for (int i = 0; i < numBits; i++) {
         set(i, (*this)[i] ^ b[i]);

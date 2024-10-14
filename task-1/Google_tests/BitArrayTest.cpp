@@ -86,6 +86,8 @@ TEST(BitArray, BitwiseANDAssignment)
 {
     BitArray bitArray1(4, 2);
     BitArray bitArray2(4, 1);
+    BitArray bitArray3(8, 20);
+    EXPECT_THROW(bitArray1 &= bitArray3, std::invalid_argument);
     bitArray1 &= bitArray2;
     ASSERT_EQ(bitArray1.toString(), "0000");
 }
@@ -94,6 +96,8 @@ TEST(BitArray, BitwiseORAssignment)
 {
     BitArray bitArray1(4, 2);
     BitArray bitArray2(4, 1);
+    BitArray bitArray3(8, 20);
+    EXPECT_THROW(bitArray1 |= bitArray3, std::invalid_argument);
     bitArray1 |= bitArray2;
     ASSERT_EQ(bitArray1.toString(), "0011");
 }
@@ -102,6 +106,8 @@ TEST(BitArray, BitwiseXORAssignment)
 {
     BitArray bitArray1(4, 2);
     BitArray bitArray2(4, 1);
+    BitArray bitArray3(8, 20);
+    EXPECT_THROW(bitArray1 ^= bitArray3, std::invalid_argument);
     bitArray1 ^= bitArray2;
     ASSERT_EQ(bitArray1.toString(), "0011");
 }
@@ -216,7 +222,8 @@ TEST(BitArray, SubscriptOperator)
     ASSERT_TRUE(bitArray[0]);
 }
 
-TEST(BitArray, size){
+TEST(BitArray, size)
+{
     BitArray bitArray1;
     ASSERT_EQ(bitArray1.size(), 0);
     BitArray bitArray2(4, 2);
@@ -226,7 +233,8 @@ TEST(BitArray, size){
     ASSERT_EQ(bitArray3.size(), 10);
 }
 
-TEST(BitArray, empty){
+TEST(BitArray, empty)
+{
     BitArray bitArray1;
     ASSERT_TRUE(bitArray1.empty());
     BitArray bitArray2(4, 2);
@@ -239,7 +247,8 @@ TEST(BitArray, empty){
     ASSERT_TRUE(bitArray4.empty());
 }
 
-TEST(BitArray, ToString){
+TEST(BitArray, ToString)
+{
     BitArray bitArray1;
     ASSERT_EQ(bitArray1.toString(), "");
     BitArray bitArray2(4, 2);
@@ -262,6 +271,8 @@ TEST(BitArray, EqualityOperator)
     ASSERT_TRUE(bitArray1 == bitArray2);
     BitArray bitArray3(4, 1);
     ASSERT_FALSE(bitArray1 == bitArray3);
+    BitArray bitArray4(10, 69);
+    ASSERT_FALSE(bitArray1 == bitArray4);
 }
 
 TEST(BitArray, InequalityOperator)
@@ -271,6 +282,8 @@ TEST(BitArray, InequalityOperator)
     ASSERT_TRUE(bitArray1 != bitArray2);
     BitArray bitArray3(4, 1);
     ASSERT_TRUE(bitArray1 != bitArray3);
+    BitArray bitArray4 = bitArray3;
+    ASSERT_FALSE(bitArray3 != bitArray4);
 }
 
 TEST(BitArray, BitwiseAND)
