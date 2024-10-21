@@ -2,7 +2,6 @@
 #define BIT_ARRAY_H
 
 #include <string>
-#include <vector>
 
 class BitArray
 {
@@ -19,7 +18,7 @@ private:
     };
 
     int numBits;
-    std::vector<unsigned char> data;
+    char *data;
 
 public:
     BitArray();

@@ -1,4 +1,5 @@
 #include "BitArray.h"
+#include <cstring>
 #include <stdexcept>
 #include <string>
 
@@ -8,7 +9,7 @@
 *   Parameters : None
 *   Returned   : None
 ***************************************************************************/
-BitArray::BitArray() : numBits(0) {}
+BitArray::BitArray() : numBits(0), data(nullptr) {}
 
 /***************************************************************************
 *   Method     : ~BitArray (destructor)
@@ -16,7 +17,10 @@ BitArray::BitArray() : numBits(0) {}
 *   Parameters : None
 *   Returned   : None
 ***************************************************************************/
-BitArray::~BitArray() = default;
+BitArray::~BitArray()
+{
+        delete[] data;
+}
 
 /***************************************************************************
 *   Method     : BitArray (constructor with initial size and value)
@@ -27,7 +31,7 @@ BitArray::~BitArray() = default;
 ***************************************************************************/
 BitArray::BitArray(int numBits, unsigned long value) : numBits(numBits)
 {
-    data.resize((numBits + 7) / 8);
+    data = new char[(numBits + 7) / 8];
     for (int i = 0; i < sizeof(long) * 8 && i < numBits; ++i) {
         set(numBits - i - 1, (value >> i) & 1);
     }
@@ -41,8 +45,9 @@ BitArray::BitArray(int numBits, unsigned long value) : numBits(numBits)
 ***************************************************************************/
 BitArray::BitArray(const BitArray &b)
 {
-    data = b.data;
     numBits = b.numBits;
+    data = new char[(numBits + 7) / 8];
+    std::memcpy(data, b.data, (numBits + 7) / 8 * sizeof(char));
 }
 
 /***************************************************************************
@@ -53,7 +58,7 @@ BitArray::BitArray(const BitArray &b)
 ***************************************************************************/
 void BitArray::swap(BitArray &b)
 {
-    data.swap(b.data);
+    std::swap(data, b.data);
     std::swap(numBits, b.numBits);
 }
 
@@ -65,9 +70,12 @@ void BitArray::swap(BitArray &b)
 ***************************************************************************/
 BitArray &BitArray::operator=(const BitArray &b)
 {
-    resize(b.data.size());
-    data = b.data;
-    numBits = b.numBits;
+    if (this != &b) {
+        delete[] data;
+        numBits = b.numBits;
+        data = new char[(numBits + 7) / 8];
+        std::memcpy(data, b.data, (numBits + 7) / 8 * sizeof(char));
+    }
     return *this;
 }
 
@@ -80,7 +88,14 @@ BitArray &BitArray::operator=(const BitArray &b)
 ***************************************************************************/
 void BitArray::resize(int numBits, bool value)
 {
-    data.resize((numBits + 7) / 8);
+    int newSize = (numBits + 7) / 8;
+    char *newData = new char[newSize];
+    std::memset(newData, 0, newSize * sizeof(char));
+    if (data) {
+        std::memcpy(newData, data, std::min(newSize, (this->numBits + 7) / 8) * sizeof(char));
+    }
+    delete[] data;
+    data = newData;
     for (int i = this->numBits; i < numBits; ++i) {
         set(i, value);
     }
@@ -95,8 +110,9 @@ void BitArray::resize(int numBits, bool value)
 ***************************************************************************/
 void BitArray::clear()
 {
+    delete[] data;
+    data = nullptr;
     numBits = 0;
-    data.clear();
 }
 
 /***************************************************************************
@@ -108,9 +124,8 @@ void BitArray::clear()
 void BitArray::pushBack(bool bit)
 {
     if (numBits % 8 == 0) {
-        data.resize((numBits / 8) + 1);
+        resize(numBits + 1);
         set(numBits, bit);
-        numBits++;
     } else {
         set(numBits, bit);
         numBits++;
