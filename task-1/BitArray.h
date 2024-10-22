@@ -11,6 +11,7 @@ private:
     private:
         BitArray &bitArray;
         int index;
+
     public:
         Wrapper(BitArray &bitArray, int index);
         Wrapper &operator=(bool value);
@@ -67,4 +68,4 @@ BitArray operator&(const BitArray &b1, const BitArray &b2);
 BitArray operator|(const BitArray &b1, const BitArray &b2);
 BitArray operator^(const BitArray &b1, const BitArray &b2);
 
-#endif // BIT_ARRAY_H
+#endif// BIT_ARRAY_H
