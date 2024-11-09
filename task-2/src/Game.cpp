@@ -1,33 +1,35 @@
 #include "Game.h"
+#include "UniverseLoader.h"
+#include "UniverseSaver.h"
 #include <iostream>
 
 Game::Game(const std::string &name, const std::string &rule, int width, int height)
     : universe(name, rule, width, height), commandHandler(universe) {}
 
 Game::Game(const std::string &filename)
-    : universe(filename), commandHandler(universe) {}
+    : universe(UniverseLoader::loadFromFile(filename)), commandHandler(universe) {}
 
 void Game::start()
 {
-    bool gameActive = true;
+    gameActive = true;
     universe.print();
     while (gameActive) {
         std::string command;
-        std::cin >> command;
-        if (command == "tick") {
-            int n = 1;
-            std::cin >> n;
-            universe.tick(n);
-        } else if (command == "dump") {
-            std::string filename;
-            std::cin >> filename;
-            universe.saveToFile(filename);
-        } else if (command == "exit") {
+        std::getline(std::cin, command);
+        if (command == "exit") {
             gameActive = false;
-        } else if (command == "help") {
-            commandHandler.printHelp();
+        } else if (command != "exit") {
+            commandHandler.handleCommand(command);
         } else {
             std::cerr << "Unknown command: " << command << std::endl;
         }
     }
+}
+
+void Game::runOffline(int iterations, const std::string &outputFile)
+{
+    for (int i = 0; i < iterations; ++i) {
+        universe.update();
+    }
+    UniverseSaver::saveUniverse(universe, outputFile);
 }

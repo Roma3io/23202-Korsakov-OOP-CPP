@@ -1,32 +1,13 @@
 #include "Grid.h"
 #include <stdexcept>
 
-Grid::Grid(int width, int height) : width(width), height(height)
-{
-    cells = new bool*[height];
-    for (int i = 0; i < height; i++) {
-        cells[i] = new bool[width];
-        for (int j = 0; j < width; j++) {
-            cells[i][j] = false;
-        }
-    }
-}
+Grid::Grid() : width(0), height(0) {}
 
+Grid::Grid(int width, int height) : width(width), height(height), cells(height, std::vector<bool>(width, false)) {}
 
-Grid::~Grid()
+void Grid::setCell(const int row, const int column, bool alive)
 {
-    for (int i = 0; i < height; i++) {
-        delete[] cells[i];
-    }
-    delete[] cells;
-}
-
-void Grid::setCell(int x, int y, bool alive)
-{
-    if (x >= width || y >= height) {
-        throw std::out_of_range("Index out of range");
-    }
-    cells[y][x] = alive;
+    cells[row][column] = alive;
 }
 
 int Grid::getHeight() const
@@ -39,18 +20,12 @@ int Grid::getWidth() const
     return width;
 }
 
-bool **Grid::getCells() const
+const std::vector<std::vector<bool>> &Grid::getCells() const
 {
-    if (cells) {
-        return cells;
-    }
-    throw std::runtime_error("Grid is not initialized");
+    return cells;
 }
 
-bool Grid::getCell(int x, int y) const
+bool Grid::getCell(const int row, const int column) const
 {
-    if (x >= width || y >= height) {
-        throw std::out_of_range("Index out of range");
-    }
-        return cells[y][x];
+    return cells[row][column];
 }

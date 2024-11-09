@@ -2,16 +2,20 @@
 #define COMMANDHANDLER_H
 
 #include "Universe.h"
+#include <string>
 
 class CommandHandler
 {
 public:
     CommandHandler(Universe &universe);
     void handleCommand(const std::string &command);
-    void printHelp();
+    static void printHelp();
 
 private:
     Universe &universe;
+    void handleTick(const std::string &command) const;
+    void handleAuto() const;
+    void handleDump(const std::string &command) const;
 };
 
-#endif// COMMANDHANDLER_H
+#endif // COMMANDHANDLER_H
