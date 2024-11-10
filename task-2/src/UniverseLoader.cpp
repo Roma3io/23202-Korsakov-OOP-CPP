@@ -47,7 +47,7 @@ Universe UniverseLoader::loadFromFile(const std::string &filename)
         std::cin.get();
         exit(0);
     }
-    checkWarnings(grid, hasName, hasRule);
+    handleWarnings(grid, hasName, hasRule);
     if (!hasName) {
         name = "My_universe";
     }
@@ -82,7 +82,7 @@ void UniverseLoader::processCells(std::set<std::pair<int, int>> &liveCells, cons
 {
     std::istringstream iss(line);
     int column, row;
-    int count = 3;
+    static int count = 3;
     while (iss >> row >> column) {
         count++;
         if (column >= 0 && column < grid.getWidth() && row >= 0 && row < grid.getHeight()) {
@@ -107,7 +107,7 @@ void UniverseLoader::processCells(std::set<std::pair<int, int>> &liveCells, cons
     }
 }
 
-void UniverseLoader::checkWarnings(const Grid &grid, bool hasName, bool hasRule)
+void UniverseLoader::handleWarnings(const Grid &grid, bool hasName, bool hasRule)
 {
     if (!hasName) {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -123,6 +123,18 @@ void UniverseLoader::checkWarnings(const Grid &grid, bool hasName, bool hasRule)
         std::cerr << "Warning: No rule specified in the file." << std::endl;
         SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
         std::cerr << "Game will start with basic rules: B3/S23" << std::endl;
+        std::cin.get();
+    }
+    if (grid.getWidth() == 0 || grid.getHeight() == 0) {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+        std::cerr << "Warning: Grid size is zero." << std::endl;
+        std::cin.get();
+    }
+    if (grid.getWidth() > 75 | grid.getHeight() > 75) {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+        std::cerr << "Warning: Grid size is too big." << std::endl;
         std::cin.get();
     }
 }
