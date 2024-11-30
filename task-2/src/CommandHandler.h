@@ -8,14 +8,54 @@ class CommandHandler
 {
 public:
     CommandHandler(Universe &universe);
-    void handleCommand(const std::string &command);
-    static void printHelp();
+    virtual void handle() = 0;
 
-private:
+protected:
     Universe &universe;
-    void handleTick(const std::string &command) const;
-    void handleAuto() const;
-    void handleDump(const std::string &command) const;
 };
 
-#endif // COMMANDHANDLER_H
+class TickCommandHandler : public CommandHandler
+{
+public:
+    TickCommandHandler(Universe &universe, int n);
+    void handle() override;
+
+private:
+    int n;
+};
+
+class AutoCommandHandler : public CommandHandler
+{
+public:
+    AutoCommandHandler(Universe &universe);
+    void handle() override;
+};
+
+class DumpCommandHandler : public CommandHandler
+{
+public:
+    DumpCommandHandler(Universe &universe, const std::string &filename);
+    void handle() override;
+
+private:
+    std::string filename;
+};
+
+class HelpCommandHandler : public CommandHandler
+{
+public:
+    HelpCommandHandler(Universe &universe);
+    void handle() override;
+};
+
+class ExitCommandHandler : public CommandHandler
+{
+public:
+    ExitCommandHandler(Universe &universe, bool &gameActive);
+    void handle() override;
+
+private:
+    bool &gameActive;
+};
+
+#endif// COMMANDHANDLER_H
