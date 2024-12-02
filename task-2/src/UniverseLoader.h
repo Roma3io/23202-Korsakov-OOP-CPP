@@ -8,14 +8,14 @@
 class UniverseLoader
 {
 public:
-    static Universe loadFromFile(const std::string &filename);
+    Universe loadFromFile(const std::string &filename);
 
 private:
-    static void processName(const std::string &line, std::string &name);
-    static void processRule(const std::string &line, std::string &rule);
-    static void processSize(const std::string &line, int &width, int &height, Grid &grid);
-    static void processCells(std::set<std::pair<int, int>> &liveCells, const std::string &line, Grid &grid);
-    static void handleWarnings(const Grid &grid, bool hasName, bool hasRule);
+    void processName(const std::string &line, std::string &name);
+    void processRule(const std::string &line, std::string &rule);
+    void processSize(const std::string &line, int &width, int &height, Grid &grid);
+    void processCells(std::set<std::pair<int, int>> &liveCells, const std::string &line, Grid &grid);
+    void handleWarnings(const Grid &grid, bool hasName, bool hasRule);
 };
 
 #endif// UNIVERSELOADER_H

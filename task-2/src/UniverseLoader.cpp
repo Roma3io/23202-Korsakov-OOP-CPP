@@ -9,7 +9,8 @@ Universe UniverseLoader::loadFromFile(const std::string &filename)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     std::vector<std::string> lines;
-    FileReader::readFile(filename, lines);
+    FileReader fileReader;
+    fileReader.readFile(filename, lines);
     std::string name;
     std::string rule;
     int width = 0;
@@ -19,20 +20,21 @@ Universe UniverseLoader::loadFromFile(const std::string &filename)
     bool hasRule = false;
     bool hasSize = false;
     std::set<std::pair<int, int>> liveCells;
+    UniverseLoader universeLoader;
     for (const auto &line: lines) {
         if (line.substr(0, 3) == "#N ") {
-            processName(line, name);
+            universeLoader.processName(line, name);
             hasName = true;
         } else if (line.substr(0, 3) == "#R ") {
-            processRule(line, rule);
+            universeLoader.processRule(line, rule);
             hasRule = true;
         } else if (line.substr(0, 3) == "#S ") {
-            processSize(line, width, height, grid);
+            universeLoader.processSize(line, width, height, grid);
             hasSize = true;
         } else if (line[0] != '#') {
             if (!hasSize)
                 break;
-            processCells(liveCells, line, grid);
+            universeLoader.processCells(liveCells, line, grid);
         } else {
             SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
             std::cerr << "Unknown line format: " << line << " To continue press enter" << std::endl;

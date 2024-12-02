@@ -8,13 +8,13 @@
 #include <thread>
 #include <vector>
 
-Universe::Universe() : iteration(0)
+Universe::Universe() : generation(0)
 {
     grid = Grid();
 }
 
 Universe::Universe(const std::string &name, const std::string &rule, int width, int height)
-    : name(name), rule(rule), grid(width, height), iteration(0)
+    : name(name), rule(rule), grid(width, height), generation(0)
 {
     std::srand(std::time(0));
     for (int row = 0; row < grid.getHeight(); row++) {
@@ -54,41 +54,6 @@ void Universe::print() const
     std::cout << "+" << std::endl;
 }
 
-
-void Universe::tick(int n)
-{
-    for (int i = 0; i < n; i++) {
-        iteration++;
-        update();
-    }
-    print();
-    std::cout << "Iteration: " << iteration << std::endl;
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Rule: " << rule << std::endl;
-    std::cout << std::endl;
-}
-
-void Universe::autoRun()
-{
-    std::cout << "To start the universe's life, press any key..." << std::endl;
-    _getch();
-    while (true) {
-        iteration++;
-        update();
-        print();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        if (_kbhit()) {
-            break;
-        }
-    }
-    _getch();
-    std::cout << "Simulation stopped." << std::endl;
-    std::cout << "Iteration: " << iteration << std::endl;
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Rule: " << rule << std::endl;
-}
-
-
 void Universe::update()
 {
     bool **newCells = new bool *[grid.getHeight()];
@@ -113,6 +78,7 @@ void Universe::update()
     for (int row = 0; row < grid.getHeight(); row++) {
         delete[] newCells[row];
     }
+    generation++;
     delete[] newCells;
 }
 
@@ -152,3 +118,19 @@ void Universe::setRule(const std::string &rule)
         }
     }
 }
+
+int Universe::getGeneration() const
+{
+    return generation;
+}
+
+std::string Universe::getName() const
+{
+    return name;
+}
+
+std::string Universe::getRule() const
+{
+    return rule;
+}
+

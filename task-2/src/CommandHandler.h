@@ -17,11 +17,11 @@ protected:
 class TickCommandHandler : public CommandHandler
 {
 public:
-    TickCommandHandler(Universe &universe, int n);
+    TickCommandHandler(Universe &universe, int iteration);
     void handle() override;
 
 private:
-    int n;
+    int iteration;
 };
 
 class AutoCommandHandler : public CommandHandler

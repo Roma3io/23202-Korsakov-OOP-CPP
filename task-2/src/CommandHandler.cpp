@@ -1,16 +1,26 @@
 #include "CommandHandler.h"
 #include "UniverseSaver.h"
+
+#include <chrono>
+#include <conio.h>
 #include <iostream>
-#include <sstream>
+#include <thread>
 
 CommandHandler::CommandHandler(Universe &universe) : universe(universe) {}
 
-TickCommandHandler::TickCommandHandler(Universe &universe, int n)
-    : CommandHandler(universe), n(n) {}
+TickCommandHandler::TickCommandHandler(Universe &universe, int iteration)
+    : CommandHandler(universe), iteration(iteration) {}
 
 void TickCommandHandler::handle()
 {
-    universe.tick(n);
+    for (int i = 0; i < iteration; i++) {
+        universe.update();
+    }
+    universe.print();
+    std::cout << "Iteration: " << universe.getGeneration() << std::endl;
+    std::cout << "Name: " << universe.getName() << std::endl;
+    std::cout << "Rule: " << universe.getRule() << std::endl;
+    std::cout << std::endl;
 }
 
 AutoCommandHandler::AutoCommandHandler(Universe &universe)
@@ -18,7 +28,21 @@ AutoCommandHandler::AutoCommandHandler(Universe &universe)
 
 void AutoCommandHandler::handle()
 {
-    universe.autoRun();
+    std::cout << "To start the universe's life, press any key..." << std::endl;
+    _getch();
+    while (true) {
+        universe.update();
+        universe.print();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        if (_kbhit()) {
+            break;
+        }
+    }
+    _getch();
+    std::cout << "Simulation stopped." << std::endl;
+    std::cout << "Iteration: " << universe.getGeneration() << std::endl;
+    std::cout << "Name: " << universe.getName() << std::endl;
+    std::cout << "Rule: " << universe.getRule() << std::endl;
 }
 
 DumpCommandHandler::DumpCommandHandler(Universe &universe, const std::string &filename)
@@ -26,7 +50,8 @@ DumpCommandHandler::DumpCommandHandler(Universe &universe, const std::string &fi
 
 void DumpCommandHandler::handle()
 {
-    UniverseSaver::saveUniverse(universe, filename);
+    UniverseSaver universeSaver;
+    universeSaver.saveUniverse(universe, filename);
 }
 
 HelpCommandHandler::HelpCommandHandler(Universe &universe)

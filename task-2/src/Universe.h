@@ -12,8 +12,9 @@ public:
     Universe(const std::string &name, const std::string &rule, int width, int height);
     void print() const;
     void update();
-    void tick(int n = 1);
-    void autoRun();
+    int getGeneration() const;
+    std::string getName() const;
+    std::string getRule() const;
 
 private:
     std::string name;
@@ -21,7 +22,7 @@ private:
     Grid grid;
     std::vector<int> birthRule;
     std::vector<int> survivalRule;
-    int iteration;
+    int generation;
     int countNeighbors(int row, int column) const;
     void setRule(const std::string &rule);
     friend class UniverseLoader;

@@ -9,7 +9,10 @@ Game::Game(const std::string &name, const std::string &rule, int width, int heig
     : universe(name, rule, width, height) {}
 
 Game::Game(const std::string &filename)
-    : universe(UniverseLoader::loadFromFile(filename)) {}
+{
+    UniverseLoader universeLoader;
+    universe = universeLoader.loadFromFile(filename);
+}
 
 void Game::start()
 {
@@ -33,7 +36,8 @@ void Game::runOffline(int iterations, const std::string &outputFile)
     for (int i = 0; i < iterations; ++i) {
         universe.update();
     }
-    UniverseSaver::saveUniverse(universe, outputFile);
+    UniverseSaver universeSaver;
+    universeSaver.saveUniverse(universe, outputFile);
 }
 
 CommandHandler *Game::createCommandHandler(const std::string &command)

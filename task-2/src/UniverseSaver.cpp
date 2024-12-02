@@ -6,11 +6,13 @@
 void UniverseSaver::saveUniverse(const Universe &universe, const std::string &filename)
 {
     std::vector<std::string> outputLines;
-    addName(universe.name, outputLines);
-    addRule(universe.rule, outputLines);
-    addSize(universe.grid, outputLines);
-    addCells(universe.grid, outputLines);
-    FileWriter::writeFile(filename, outputLines);
+    UniverseSaver universeSaver;
+    universeSaver.addName(universe.name, outputLines);
+    universeSaver.addRule(universe.rule, outputLines);
+    universeSaver.addSize(universe.grid, outputLines);
+    universeSaver.addCells(universe.grid, outputLines);
+    FileWriter fileWriter;
+    fileWriter.writeFile(filename, outputLines);
 }
 
 void UniverseSaver::addName(const std::string &name, std::vector<std::string> &outputLines)
