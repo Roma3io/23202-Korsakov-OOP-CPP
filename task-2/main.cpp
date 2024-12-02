@@ -40,7 +40,6 @@ bool parseArguments(int argc, char *argv[], std::string &inputFile, std::string 
     return true;
 }
 
-
 int main(int argc, char *argv[])
 {
     int iterations = 0;
@@ -65,4 +64,5 @@ int main(int argc, char *argv[])
         printHelp();
         return 1;
     }
+    return 0;
 }
