@@ -1,16 +1,28 @@
 #include "FileWriter.h"
-#include <fstream>
-#include <iostream>
 
-void FileWriter::writeFile(const std::string &filename, const std::vector<std::string> &lines)
+FileWriter::FileWriter(const std::string &fileName)
 {
-    std::ofstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
+    outputFileName = fileName;
+}
+
+void FileWriter::open()
+{
+    outputFile.open(outputFileName, std::ofstream::out);
+}
+
+void FileWriter::close()
+{
+    outputFile.close();
+}
+
+bool FileWriter::isOpen()
+{
+    return outputFile.is_open();
+}
+
+void FileWriter::write(std::vector<std::string> lines)
+{
     for (const auto &line: lines) {
-        file << line << std::endl;
+        outputFile << line << std::endl;
     }
-    file.close();
 }

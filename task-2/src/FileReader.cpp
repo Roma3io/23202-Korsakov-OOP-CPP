@@ -1,16 +1,40 @@
 #include "FileReader.h"
-#include <fstream>
-#include <iostream>
 
-void FileReader::readFile(const std::string& filename, std::vector<std::string>& lines) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
+FileReader::FileReader(const std::string &fileName)
+{
+    inputFileName = fileName;
+}
+
+void FileReader::open()
+{
+    inputFile.open(inputFileName, std::ifstream::in);
+}
+
+void FileReader::close()
+{
+    inputFile.close();
+}
+
+bool FileReader::isOpen()
+{
+    return inputFile.is_open();
+}
+
+bool FileReader::hasNext()
+{
+    return inputFile.peek() != EOF;
+}
+
+std::string FileReader::next()
+{
     std::string line;
-    while (std::getline(file, line)) {
-        lines.push_back(line);
+    if (getline(inputFile, line)) {
+        return line;
     }
-    file.close();
+    return "";
+}
+
+void FileReader::rewind()
+{
+    inputFile.seekg(0, std::ios::beg);
 }

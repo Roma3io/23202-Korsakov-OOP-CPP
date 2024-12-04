@@ -1,6 +1,6 @@
 #include "UniverseSaver.h"
 #include "FileWriter.h"
-#include <sstream>
+#include <iostream>
 #include <vector>
 
 void UniverseSaver::saveUniverse(const Universe &universe, const std::string &filename)
@@ -11,8 +11,14 @@ void UniverseSaver::saveUniverse(const Universe &universe, const std::string &fi
     universeSaver.addRule(universe.rule, outputLines);
     universeSaver.addSize(universe.grid, outputLines);
     universeSaver.addCells(universe.grid, outputLines);
-    FileWriter fileWriter;
-    fileWriter.writeFile(filename, outputLines);
+    FileWriter fileWriter(filename);
+    fileWriter.open();
+    if (!fileWriter.isOpen()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        exit(0);
+    }
+    fileWriter.write(outputLines);
+    fileWriter.close();
 }
 
 void UniverseSaver::addName(const std::string &name, std::vector<std::string> &outputLines)

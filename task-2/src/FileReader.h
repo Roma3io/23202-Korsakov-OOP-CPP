@@ -1,14 +1,23 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
+#include <fstream>
 #include <string>
-#include <vector>
 
 class FileReader
 {
+private:
+    std::ifstream inputFile;
+    std::string inputFileName;
+
 public:
-    void readFile(const std::string &fileName, std::vector<std::string> &lines);
+    FileReader(const std::string &fileName);
+    void open();
+    void close();
+    bool isOpen();
+    bool hasNext();
+    std::string next();
+    void rewind();
 };
 
-
-#endif//FILEREADER_H
+#endif

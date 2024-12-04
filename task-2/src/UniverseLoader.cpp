@@ -9,8 +9,16 @@ Universe UniverseLoader::loadFromFile(const std::string &filename)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     std::vector<std::string> lines;
-    FileReader fileReader;
-    fileReader.readFile(filename, lines);
+    FileReader fileReader(filename);
+    fileReader.open();
+    if (!fileReader.isOpen()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        exit(0);
+    }
+    while (fileReader.hasNext()) {
+        lines.push_back(fileReader.next());
+    }
+    fileReader.close();
     std::string name;
     std::string rule;
     int width = 0;
