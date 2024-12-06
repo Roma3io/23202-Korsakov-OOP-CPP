@@ -3,6 +3,8 @@ project(task_3)
 
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 add_executable(task_3 main.cpp)
 
 set_target_properties(task_3 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/WAV_FILES)

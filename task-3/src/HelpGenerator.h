@@ -1,15 +1,14 @@
 #ifndef HELPGENERATOR_H
 #define HELPGENERATOR_H
 
+#include "Converters.h"
 #include <string>
 #include <vector>
+#include <memory>
 
 class HelpGenerator {
 public:
     std::string generateHelpMessage();
-
-private:
-    std::vector<std::string> getConvertersInfo();
 };
 
 #endif // HELPGENERATOR_H

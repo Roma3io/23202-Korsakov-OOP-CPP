@@ -1,5 +1,4 @@
 #include "ConfigParser.h"
-#include "ConverterFactory.h"
 #include "ExceptionHandler.h"
 #include <fstream>
 #include <sstream>
@@ -7,8 +6,8 @@
 ConfigParser::ConfigParser(const std::string& filename, const std::vector<std::vector<int16_t>>& additionalStreams)
     : filename(filename), additionalStreams(additionalStreams) {}
 
-std::vector<Converter*> ConfigParser::parse() {
-    std::vector<Converter*> converters;
+std::vector<std::pair<std::string, std::vector<std::string>>> ConfigParser::parse() {
+    std::vector<std::pair<std::string, std::vector<std::string>>> converters;
     std::ifstream file(filename);
     if (!file) {
         throw FileNotFoundException("Cannot open config file: " + filename);
@@ -26,7 +25,7 @@ std::vector<Converter*> ConfigParser::parse() {
         while (iss >> param) {
             params.push_back(param);
         }
-        converters.push_back(ConverterFactory::createConverter(type, params, additionalStreams));
+        converters.emplace_back(type, params);
     }
     return converters;
 }
