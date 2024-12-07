@@ -34,8 +34,6 @@ private:
     WAVHeader header;
     std::vector<int16_t> samples;
     void readWAVFile();
-    uint32_t toLittleEndian32(const char* data) const;
-    uint16_t toLittleEndian16(const char* data) const;
 };
 
 #endif

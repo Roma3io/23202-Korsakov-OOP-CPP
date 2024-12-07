@@ -34,11 +34,23 @@ void WAVReader::readWAVFile()
     file.read(reinterpret_cast<char *>(&header.subchunk1ID), 4);
     file.read(reinterpret_cast<char *>(&header.subchunk1Size), 4);
     file.read(reinterpret_cast<char *>(&header.audioFormat), 2);
+    if(header.audioFormat != 1) {
+        throw InvalidFormatException("Must be no compress: " + filename);
+    }
     file.read(reinterpret_cast<char *>(&header.numChannels), 2);
+    if (header.numChannels != 1) {
+        throw InvalidFormatException("Must be mono: " + filename);
+    }
     file.read(reinterpret_cast<char *>(&header.sampleRate), 4);
+    if (header.sampleRate != 44100) {
+        throw InvalidFormatException("Must be 44100 hz: " + filename);
+    }
     file.read(reinterpret_cast<char *>(&header.byteRate), 4);
     file.read(reinterpret_cast<char *>(&header.blockAlign), 2);
     file.read(reinterpret_cast<char *>(&header.bitsPerSample), 2);
+    if(header.bitsPerSample != 16) {
+        throw InvalidFormatException("Must be 16 bits per sample: " + filename);
+    }
     if (std::strncmp(header.subchunk1ID, "fmt ", 4) != 0 || header.audioFormat
         != 1) {
         throw InvalidFormatException("Unsupported WAV format: " + filename);
