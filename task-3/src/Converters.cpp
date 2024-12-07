@@ -1,15 +1,20 @@
-#include "converters.h"
-#include <algorithm>
-#include <cmath>
-#include <stdexcept>
 #include "ExceptionHandler.h"
+#include "converters.h"
+#include <stdexcept>
+#include <algorithm>
 
-Muter::Muter(int start, int end) : start(start), end(end) {}
+Muter::Muter(const std::vector<std::string> &params) : Converter()
+{
+    if (params.size() != 2) {
+        throw InvalidConfigException("Invalid number of parameters for Muter");
+    }
+    start = std::stoi(params[0]);
+    end = std::stoi(params[1]);
+}
 
 std::vector<int16_t> Muter::process(const std::vector<int16_t> &input)
 {
     std::vector<int16_t> output = input;
-    int sampleRate = 44100;
     int startSample = start * sampleRate;
     int endSample = end * sampleRate;
     for (int i = startSample; i < endSample && i < output.size(); ++i) {
@@ -18,43 +23,48 @@ std::vector<int16_t> Muter::process(const std::vector<int16_t> &input)
     return output;
 }
 
-std::string Muter::getName() const { return "Muter"; }
-
-std::string Muter::getDescription() const { return "Mutes the audio."; }
-
 std::string Muter::getParameters() const
 {
     return "start: Start time in seconds, end: End time in seconds.";
 }
 
-Mixer::Mixer(const std::vector<int16_t> &additionalStream, int insertionPoint)
-    : additionalStream(additionalStream), insertionPoint(insertionPoint) {}
+Mixer::Mixer(const std::vector<std::string> &params,
+             const std::vector<std::vector<int16_t>> &additionalStreams) : Converter()
+{
+    if (params.size() != 2) {
+        throw InvalidConfigException("Invalid number of parameters for Mixer");
+    }
+    streamIndex = std::stoi(params[0].substr(1)) - 1;
+    insertionPoint = std::stoi(params[1]);
+    if (streamIndex < 0 || streamIndex > additionalStreams.size()) {
+        throw InvalidConfigException("Invalid stream index for Mixer");
+    }
+    additionalStream = additionalStreams[streamIndex - 1];
+}
 
 std::vector<int16_t> Mixer::process(const std::vector<int16_t> &input)
 {
     std::vector<int16_t> output = input;
-    int sampleRate = 44100;
     int insertionSample = insertionPoint * sampleRate;
-    int minSize = std::min(output.size() - insertionSample,
-                           additionalStream.size());
+    int minSize = std::min(output.size() - insertionSample, additionalStream.size());
     for (int i = 0; i < minSize; ++i) {
-        output[insertionSample + i] =
-                (output[insertionSample + i] + additionalStream[i]) / 2;
+        output[insertionSample + i] = (output[insertionSample + i] + additionalStream[i]) / 2;
     }
     return output;
 }
 
-std::string Mixer::getName() const { return "Mixer"; }
-
-std::string Mixer::getDescription() const { return "Mixes the audio."; }
-
 std::string Mixer::getParameters() const
 {
-    return
-            "insertion_point: Insertion point in seconds, stream_index: Index of the additional stream.";
+    return "insertion_point: Insertion point in seconds, stream_index: Index of the additional stream.";
 }
 
-VolumeConverter::VolumeConverter(float volume) : volume(volume) {}
+VolumeConverter::VolumeConverter(const std::vector<std::string> &params) : Converter()
+{
+    if (params.size() != 1) {
+        throw InvalidConfigException("Invalid number of parameters for VolumeConverter");
+    }
+    volume = std::stof(params[0]);
+}
 
 std::vector<int16_t> VolumeConverter::process(const std::vector<int16_t> &input)
 {
@@ -65,26 +75,25 @@ std::vector<int16_t> VolumeConverter::process(const std::vector<int16_t> &input)
     return output;
 }
 
-std::string VolumeConverter::getName() const { return "VolumeConverter"; }
-
-std::string VolumeConverter::getDescription() const
-{
-    return "Adjusts the volume of the audio.";
-}
-
 std::string VolumeConverter::getParameters() const
 {
     return "volume: Volume adjustment factor.";
 }
 
-Converter *MuterFactory::createConverter() const { return new Muter(0, 0); }
-
-Converter *MixerFactory::createConverter() const
+Converter *MuterFactory::createConverter(const std::vector<std::string> &params,
+                                         const std::vector<std::vector<int16_t>> &additionalStreams) const
 {
-    return new Mixer(std::vector<int16_t>(), 0);
+    return new Muter(params);
 }
 
-Converter *VolumeFactory::createConverter() const
+Converter *MixerFactory::createConverter(const std::vector<std::string> &params,
+                                         const std::vector<std::vector<int16_t>> &additionalStreams) const
 {
-    return new VolumeConverter(100.0);
+    return new Mixer(params, additionalStreams);
+}
+
+Converter *VolumeFactory::createConverter(const std::vector<std::string> &params,
+                                          const std::vector<std::vector<int16_t>> &additionalStreams) const
+{
+    return new VolumeConverter(params);
 }

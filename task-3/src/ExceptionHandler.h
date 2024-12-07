@@ -4,11 +4,12 @@
 #include <stdexcept>
 #include <string>
 
-class ExceptionHandler : public std::runtime_error
+class ExceptionHandler : public std::exception
 {
+    std::string message;
+
 public:
-    explicit ExceptionHandler(const std::string &message)
-        : std::runtime_error(message) {}
+    explicit ExceptionHandler(const std::string &message): message(message) {}
 };
 
 class InvalidFormatException : public ExceptionHandler

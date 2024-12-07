@@ -1,10 +1,16 @@
 #include "WAVReader.h"
+
+#include "ExceptionHandler.h"
+
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 
-WAVReader::WAVReader(const std::string &filename) : filename(filename) { readWAVFile(); }
+WAVReader::WAVReader(const std::string &filename) : filename(filename)
+{
+    readWAVFile();
+}
 
 WAVReader::~WAVReader() {}
 
@@ -15,12 +21,16 @@ const std::vector<int16_t> &WAVReader::getSamples() const { return samples; }
 void WAVReader::readWAVFile()
 {
     std::ifstream file(filename, std::ios::binary);
-    if (!file.is_open()) { throw std::runtime_error("Cannot open WAV file: " + filename); }
+    if (!file.is_open()) {
+        throw FileNotFoundException("Cannot open WAV file: " + filename);
+    }
     file.read(reinterpret_cast<char *>(&header.chunkID), 4);
     file.read(reinterpret_cast<char *>(&header.chunkSize), 4);
     file.read(reinterpret_cast<char *>(&header.format), 4);
     if (std::strncmp(header.chunkID, "RIFF", 4) != 0 ||
-        std::strncmp(header.format, "WAVE", 4) != 0) { throw std::runtime_error("Invalid WAV file format: " + filename); }
+        std::strncmp(header.format, "WAVE", 4) != 0) {
+        throw InvalidFormatException("Invalid WAV file format: " + filename);
+    }
     file.read(reinterpret_cast<char *>(&header.subchunk1ID), 4);
     file.read(reinterpret_cast<char *>(&header.subchunk1Size), 4);
     file.read(reinterpret_cast<char *>(&header.audioFormat), 2);
@@ -29,7 +39,10 @@ void WAVReader::readWAVFile()
     file.read(reinterpret_cast<char *>(&header.byteRate), 4);
     file.read(reinterpret_cast<char *>(&header.blockAlign), 2);
     file.read(reinterpret_cast<char *>(&header.bitsPerSample), 2);
-    if (std::strncmp(header.subchunk1ID, "fmt ", 4) != 0 || header.audioFormat != 1) { throw std::runtime_error("Unsupported WAV format: " + filename); }
+    if (std::strncmp(header.subchunk1ID, "fmt ", 4) != 0 || header.audioFormat
+        != 1) {
+        throw InvalidFormatException("Unsupported WAV format: " + filename);
+    }
     char subchunkID[4];
     uint32_t subchunkSize;
     while (true) {
@@ -48,5 +61,8 @@ void WAVReader::readWAVFile()
     int numSamples = header.subchunk2Size / (header.bitsPerSample / 8);
     samples.resize(numSamples);
     file.read(reinterpret_cast<char *>(samples.data()), header.subchunk2Size);
-    if (!file) { throw std::runtime_error("Failed to read WAV data from file: " + filename); }
+    if (!file) {
+        throw FileNotFoundException(
+                "Failed to read WAV data from file: " + filename);
+    }
 }
