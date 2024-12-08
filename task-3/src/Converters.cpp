@@ -23,13 +23,9 @@ std::vector<int16_t> Muter::process(const std::vector<int16_t> &input)
     return output;
 }
 
-std::string Muter::getParameters() const
-{
-    return "start: Start time in seconds, end: End time in seconds.";
-}
-
 Mixer::Mixer(const std::vector<std::string> &params,
-             const std::vector<std::vector<int16_t>> &additionalStreams) : Converter()
+             const std::vector<std::vector<int16_t>> &additionalStreams) :
+    Converter()
 {
     if (params.size() != 2) {
         throw InvalidConfigException("Invalid number of parameters for Mixer");
@@ -46,22 +42,21 @@ std::vector<int16_t> Mixer::process(const std::vector<int16_t> &input)
 {
     std::vector<int16_t> output = input;
     int insertionSample = insertionPoint * sampleRate;
-    int minSize = std::min(output.size() - insertionSample, additionalStream.size());
+    int minSize = std::min(output.size() - insertionSample,
+                           additionalStream.size());
     for (int i = 0; i < minSize; ++i) {
-        output[insertionSample + i] = (output[insertionSample + i] + additionalStream[i]) / 2;
+        output[insertionSample + i] =
+                (output[insertionSample + i] + additionalStream[i]) / 2;
     }
     return output;
 }
 
-std::string Mixer::getParameters() const
-{
-    return "insertion_point: Insertion point in seconds, stream_index: Index of the additional stream.";
-}
-
-VolumeConverter::VolumeConverter(const std::vector<std::string> &params) : Converter()
+VolumeConverter::VolumeConverter(
+        const std::vector<std::string> &params) : Converter()
 {
     if (params.size() != 1) {
-        throw InvalidConfigException("Invalid number of parameters for VolumeConverter");
+        throw InvalidConfigException(
+                "Invalid number of parameters for VolumeConverter");
     }
     volume = std::stof(params[0]);
 }
@@ -75,25 +70,23 @@ std::vector<int16_t> VolumeConverter::process(const std::vector<int16_t> &input)
     return output;
 }
 
-std::string VolumeConverter::getParameters() const
-{
-    return "volume: Volume adjustment factor.";
-}
-
 Converter *MuterFactory::createConverter(const std::vector<std::string> &params,
-                                         const std::vector<std::vector<int16_t>> &additionalStreams) const
+                                         const std::vector<std::vector<int16_t>>
+                                         &additionalStreams) const
 {
     return new Muter(params);
 }
 
 Converter *MixerFactory::createConverter(const std::vector<std::string> &params,
-                                         const std::vector<std::vector<int16_t>> &additionalStreams) const
+                                         const std::vector<std::vector<int16_t>>
+                                         &additionalStreams) const
 {
     return new Mixer(params, additionalStreams);
 }
 
-Converter *VolumeFactory::createConverter(const std::vector<std::string> &params,
-                                          const std::vector<std::vector<int16_t>> &additionalStreams) const
+Converter *VolumeFactory::createConverter(
+        const std::vector<std::string> &params,
+        const std::vector<std::vector<int16_t>> &additionalStreams) const
 {
     return new VolumeConverter(params);
 }

@@ -26,8 +26,13 @@ public:
     Muter(const std::vector<std::string> &params);
     std::vector<int16_t> process(const std::vector<int16_t> &input) override;
     std::string getName() const override { return "Muter"; }
-    std::string getDescription() const override { return "Mutes the audio."; }
-    std::string getParameters() const override;
+
+    std::string getDescription() const override
+    {
+        return "Mute the audio from <start> to <end>";
+    }
+
+    std::string getParameters() const override { return "start, end"; };
 
 private:
     int start;
@@ -43,8 +48,17 @@ public:
 
     std::vector<int16_t> process(const std::vector<int16_t> &input) override;
     std::string getName() const override { return "Mixer"; }
-    std::string getDescription() const override { return "Mixes the audio."; }
-    std::string getParameters() const override;
+
+    std::string getDescription() const override
+    {
+        return
+                "Mix the audio with index:<stream_index> starting from <insertion_point>";
+    }
+
+    std::string getParameters() const override
+    {
+        return "stream_index, insertion_point(seconds)";
+    };
 
 private:
     std::vector<int16_t> additionalStream;
@@ -62,10 +76,10 @@ public:
 
     std::string getDescription() const override
     {
-        return "Adjusts the volume of the audio.";
+        return "Set <percentage> of the audio volume";
     }
 
-    std::string getParameters() const override;
+    std::string getParameters() const override { return "percentage"; };
 
 private:
     float volume;
