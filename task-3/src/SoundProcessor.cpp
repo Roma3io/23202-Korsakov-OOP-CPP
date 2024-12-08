@@ -23,11 +23,10 @@ void SoundProcessor::process()
             createConverters();
     for (const auto &converter: converters) {
         mainSamples = converter->process(mainSamples);
+        delete converter;
     }
     WAVWriter writer(outputFile);
     WAVHeader header = mainReader.getHeader();
     header.subchunk2Size = mainSamples.size() * sizeof(int16_t);
     writer.writeWAVFile(header, mainSamples);
-    for (auto &converter: converters) { delete converter; }
-
 }
