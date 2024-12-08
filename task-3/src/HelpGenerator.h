@@ -6,7 +6,8 @@
 #include <vector>
 #include <memory>
 
-class HelpGenerator {
+class HelpGenerator
+{
 public:
     std::string generateHelpMessage();
 };

@@ -4,12 +4,14 @@
 #include "WAVReader.h"
 #include <string>
 
-class WAVWriter {
+class WAVWriter
+{
 public:
-    WAVWriter(const std::string& filename);
+    WAVWriter(const std::string &filename);
     ~WAVWriter();
 
-    void writeWAVFile(const WAVHeader& header, const std::vector<int16_t>& samples);
+    void writeWAVFile(const WAVHeader &header,
+                      const std::vector<int16_t> &samples);
 
 private:
     std::string filename;

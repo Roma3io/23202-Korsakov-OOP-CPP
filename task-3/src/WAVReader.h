@@ -6,7 +6,8 @@
 #include <cstdint>
 #include <stdexcept>
 
-struct WAVHeader {
+struct WAVHeader
+{
     char chunkID[4];
     uint32_t chunkSize;
     char format[4];
@@ -22,12 +23,13 @@ struct WAVHeader {
     uint32_t subchunk2Size;
 };
 
-class WAVReader {
+class WAVReader
+{
 public:
-    explicit WAVReader(const std::string& filename);
+    explicit WAVReader(const std::string &filename);
     ~WAVReader();
-    const WAVHeader& getHeader() const;
-    const std::vector<int16_t>& getSamples() const;
+    const WAVHeader &getHeader() const;
+    const std::vector<int16_t> &getSamples() const;
 
 private:
     std::string filename;

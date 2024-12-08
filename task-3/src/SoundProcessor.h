@@ -11,9 +11,11 @@
 #include <memory>
 #include <vector>
 
-class SoundProcessor {
+class SoundProcessor
+{
 public:
-    SoundProcessor(const std::string& configFile, const std::string& outputFile, const std::vector<std::string>& inputFiles);
+    SoundProcessor(const std::string &configFile, const std::string &outputFile,
+                   const std::vector<std::string> &inputFiles);
     void process();
 
 private:

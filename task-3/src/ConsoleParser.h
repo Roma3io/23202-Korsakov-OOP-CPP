@@ -5,7 +5,8 @@
 #include <vector>
 #include <iostream>
 
-class ConsoleParser {
+class ConsoleParser
+{
 public:
     ConsoleParser(int argc, char *argv[]);
     std::string getConfigFile() const;
