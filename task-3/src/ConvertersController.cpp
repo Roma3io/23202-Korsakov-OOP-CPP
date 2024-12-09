@@ -11,10 +11,22 @@ ConvertersController::ConvertersController(
     for (const auto &config: converterConfigs) {
         const std::string &type = config.first;
         if (type == "mute") {
+            if (config.second.size() != 2) {
+                throw InvalidConfigException(
+                        "Invalid number of parameters for Muter");
+            }
             converterFactories.push_back(new MuterFactory());
         } else if (type == "mix") {
+            if (config.second.size() != 2) {
+                throw InvalidConfigException(
+                        "Invalid number of parameters for Mixer");
+            }
             converterFactories.push_back(new MixerFactory());
         } else if (type == "volume") {
+            if (config.second.size() != 1) {
+                throw InvalidConfigException(
+                        "Invalid number of parameters for VolumeConverter");
+            }
             converterFactories.push_back(new VolumeFactory());
         } else { throw ExceptionHandler("Unknown converter type: " + type); }
     }

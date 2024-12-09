@@ -5,9 +5,6 @@
 
 Muter::Muter(const std::vector<std::string> &params) : Converter()
 {
-    if (params.size() != 2) {
-        throw InvalidConfigException("Invalid number of parameters for Muter");
-    }
     start = std::stoi(params[0]);
     end = std::stoi(params[1]);
 }
@@ -27,9 +24,6 @@ Mixer::Mixer(const std::vector<std::string> &params,
              const std::vector<std::vector<int16_t>> &additionalStreams) :
     Converter()
 {
-    if (params.size() != 2) {
-        throw InvalidConfigException("Invalid number of parameters for Mixer");
-    }
     streamIndex = std::stoi(params[0].substr(1)) - 1;
     insertionPoint = std::stoi(params[1]);
     if (streamIndex < 0 || streamIndex > additionalStreams.size()) {
@@ -54,10 +48,6 @@ std::vector<int16_t> Mixer::process(const std::vector<int16_t> &input)
 VolumeConverter::VolumeConverter(
         const std::vector<std::string> &params) : Converter()
 {
-    if (params.size() != 1) {
-        throw InvalidConfigException(
-                "Invalid number of parameters for VolumeConverter");
-    }
     volume = std::stof(params[0]);
 }
 
