@@ -1,5 +1,6 @@
 #include "ConsoleParser.h"
 #include "HelpGenerator.h"
+#include "ExceptionHandler.h"
 
 ConsoleParser::ConsoleParser(int argc, char *argv[])
 {
@@ -24,10 +25,7 @@ void ConsoleParser::parseArguments(int argc, char *argv[])
                 for (int j = i + 1; j < argc; ++j) {
                     inputFiles.push_back(argv[j]);
                 }
-            } else {
-                std::cerr << "Error: Invalid arguments" << std::endl;
-                exit(1);
-            }
+            } else { throw InvalidFormatException("Error: Invalid arguments"); }
         }
     }
 }
