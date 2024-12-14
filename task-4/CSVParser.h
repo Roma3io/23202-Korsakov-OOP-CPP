@@ -14,7 +14,7 @@ T ParseToken(const std::string &token, int line, int column)
     std::stringstream ss(token);
     T value;
     ss >> value;
-    if (ss.fail()) {
+    if (ss.fail() || !ss.eof()) {
         throw std::runtime_error("invalid data type at line " +
                                  std::to_string(line) + ", column " +
                                  std::to_string(column));
