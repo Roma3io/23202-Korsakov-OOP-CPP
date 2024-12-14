@@ -105,7 +105,6 @@ public:
                     "CSV parsing error: unexpected end of file");
         }
         std::vector<std::string> tokens;
-        std::stringstream ss;
         bool inEscapeChar = false;
         std::string currentToken;
         int columnCount = 1;
