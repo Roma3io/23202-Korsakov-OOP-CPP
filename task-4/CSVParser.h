@@ -15,9 +15,9 @@ T ParseToken(const std::string &token, int line, int column)
     T value;
     ss >> value;
     if (ss.fail()) {
-        throw std::runtime_error(
-                "CSV parsing error at line " + std::to_string(line) +
-                ", column " + std::to_string(column) + ": invalid data type");
+        throw std::runtime_error("invalid data type at line " +
+                                 std::to_string(line) + ", column " +
+                                 std::to_string(column));
     }
     return value;
 }
@@ -101,8 +101,7 @@ public:
         std::string line;
         if (!std::getline(is, line)) {
             isEOF = true;
-            throw std::runtime_error(
-                    "CSV parsing error: unexpected end of file");
+            throw std::runtime_error("unexpected end of file");
         }
         std::vector<std::string> tokens;
         bool inEscapeChar = false;
@@ -123,10 +122,8 @@ public:
         }
         tokens.push_back(currentToken);
         if (tokens.size() != sizeof...(Args)) {
-            throw std::runtime_error("CSV parsing error at line " +
-                                     std::to_string(currentLine) + ", column " +
-                                     std::to_string(columnCount) +
-                                     ": incorrect number of columns");
+            throw std::runtime_error("incorrect number of columns at line: " +
+                                     std::to_string(currentLine));
         }
         return parseTokens<Args...>(tokens, std::index_sequence_for<Args...>{});
     }
